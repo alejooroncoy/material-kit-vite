@@ -1,70 +1,56 @@
-import Head from 'next/head';
-import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Box, Button, Link, Stack, TextField, Typography } from '@mui/material';
-import { useAuth } from 'src/hooks/use-auth';
-import { Layout as AuthLayout } from 'src/layouts/auth/layout';
+import { Helmet as Head } from "react-helmet";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
+import { useAuth } from "../../hooks/use-auth";
 
 const Page = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const auth = useAuth();
   const formik = useFormik({
     initialValues: {
-      email: '',
-      name: '',
-      password: '',
-      submit: null
+      email: "",
+      name: "",
+      password: "",
+      submit: null,
     },
     validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email('Must be a valid email')
-        .max(255)
-        .required('Email is required'),
-      name: Yup
-        .string()
-        .max(255)
-        .required('Name is required'),
-      password: Yup
-        .string()
-        .max(255)
-        .required('Password is required')
+      email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
+      name: Yup.string().max(255).required("Name is required"),
+      password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
       try {
         await auth.signUp(values.email, values.name, values.password);
-        router.push('/');
+        navigate("/");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       }
-    }
+    },
   });
 
   return (
     <>
       <Head>
-        <title>
-          Register | Devias Kit
-        </title>
+        <title>Register | Devias Kit</title>
       </Head>
       <Box
         sx={{
-          flex: '1 1 auto',
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'center'
+          flex: "1 1 auto",
+          alignItems: "center",
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <Box
           sx={{
             maxWidth: 550,
             px: 3,
-            py: '100px',
-            width: '100%'
+            py: "100px",
+            width: "100%",
           }}
         >
           <div>
@@ -72,18 +58,15 @@ const Page = () => {
               spacing={1}
               sx={{ mb: 3 }}
             >
-              <Typography variant="h4">
-                Register
-              </Typography>
+              <Typography variant="h4">Register</Typography>
               <Typography
                 color="text.secondary"
                 variant="body2"
               >
-                Already have an account?
-                &nbsp;
+                Already have an account? &nbsp;
                 <Link
-                  component={NextLink}
-                  href="/auth/login"
+                  component={RouterLink}
+                  to="/auth/login"
                   underline="hover"
                   variant="subtitle2"
                 >
@@ -154,11 +137,5 @@ const Page = () => {
     </>
   );
 };
-
-Page.getLayout = (page) => (
-  <AuthLayout>
-    {page}
-  </AuthLayout>
-);
 
 export default Page;

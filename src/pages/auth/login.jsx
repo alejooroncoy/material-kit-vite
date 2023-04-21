@@ -1,9 +1,8 @@
-import { useCallback, useState } from 'react';
-import Head from 'next/head';
-import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useCallback, useState } from "react";
+import { Helmet as Head } from "react-helmet";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import {
   Alert,
   Box,
@@ -14,81 +13,65 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography
-} from '@mui/material';
-import { useAuth } from 'src/hooks/use-auth';
-import { Layout as AuthLayout } from 'src/layouts/auth/layout';
+  Typography,
+} from "@mui/material";
+import { useAuth } from "../../hooks/use-auth";
 
 const Page = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const auth = useAuth();
-  const [method, setMethod] = useState('email');
+  const [method, setMethod] = useState("email");
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123!',
-      submit: null
+      email: "demo@devias.io",
+      password: "Password123!",
+      submit: null,
     },
     validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email('Must be a valid email')
-        .max(255)
-        .required('Email is required'),
-      password: Yup
-        .string()
-        .max(255)
-        .required('Password is required')
+      email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
+      password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
       try {
         await auth.signIn(values.email, values.password);
-        router.push('/');
+        router.push("/");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       }
-    }
+    },
   });
 
-  const handleMethodChange = useCallback(
-    (event, value) => {
-      setMethod(value);
-    },
-    []
-  );
+  const handleMethodChange = useCallback((event, value) => {
+    setMethod(value);
+  }, []);
 
-  const handleSkip = useCallback(
-    () => {
-      auth.skip();
-      router.push('/');
-    },
-    [auth, router]
-  );
+  const handleSkip = useCallback(() => {
+    auth.skip();
+    navigate("/");
+  }, [auth, navigate]);
 
   return (
     <>
       <Head>
-        <title>
-          Login | Devias Kit
-        </title>
+        <title>Login | Devias Kit</title>
       </Head>
       <Box
         sx={{
-          backgroundColor: 'background.paper',
-          flex: '1 1 auto',
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'center'
+          backgroundColor: "background.paper",
+          flex: "1 1 auto",
+          alignItems: "center",
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <Box
           sx={{
             maxWidth: 550,
             px: 3,
-            py: '100px',
-            width: '100%'
+            py: "100px",
+            width: "100%",
           }}
         >
           <div>
@@ -96,18 +79,15 @@ const Page = () => {
               spacing={1}
               sx={{ mb: 3 }}
             >
-              <Typography variant="h4">
-                Login
-              </Typography>
+              <Typography variant="h4">Login</Typography>
               <Typography
                 color="text.secondary"
                 variant="body2"
               >
-                Don&apos;t have an account?
-                &nbsp;
+                Don&apos;t have an account? &nbsp;
                 <Link
-                  component={NextLink}
-                  href="/auth/register"
+                  component={RouterLink}
+                  to="/auth/register"
                   underline="hover"
                   variant="subtitle2"
                 >
@@ -129,7 +109,7 @@ const Page = () => {
                 value="phoneNumber"
               />
             </Tabs>
-            {method === 'email' && (
+            {method === "email" && (
               <form
                 noValidate
                 onSubmit={formik.handleSubmit}
@@ -158,9 +138,7 @@ const Page = () => {
                     value={formik.values.password}
                   />
                 </Stack>
-                <FormHelperText sx={{ mt: 1 }}>
-                  Optionally you can skip.
-                </FormHelperText>
+                <FormHelperText sx={{ mt: 1 }}>Optionally you can skip.</FormHelperText>
                 {formik.errors.submit && (
                   <Typography
                     color="error"
@@ -198,7 +176,7 @@ const Page = () => {
                 </Alert>
               </form>
             )}
-            {method === 'phoneNumber' && (
+            {method === "phoneNumber" && (
               <div>
                 <Typography
                   sx={{ mb: 1 }}
@@ -217,11 +195,5 @@ const Page = () => {
     </>
   );
 };
-
-Page.getLayout = (page) => (
-  <AuthLayout>
-    {page}
-  </AuthLayout>
-);
 
 export default Page;

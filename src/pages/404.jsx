@@ -1,45 +1,43 @@
-import Head from 'next/head';
-import NextLink from 'next/link';
-import ArrowLeftIcon from '@heroicons/react/24/solid/ArrowLeftIcon';
-import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
+import { Helmet as Head } from "react-helmet";
+import { Link } from "react-router-dom";
+import ArrowLeftIcon from "@heroicons/react/24/solid/ArrowLeftIcon";
+import { Box, Button, Container, SvgIcon, Typography } from "@mui/material";
 
 const Page = () => (
   <>
     <Head>
-      <title>
-        404 | Devias Kit
-      </title>
+      <title>404 | Devias Kit</title>
     </Head>
     <Box
       component="main"
       sx={{
-        alignItems: 'center',
-        display: 'flex',
+        alignItems: "center",
+        display: "flex",
         flexGrow: 1,
-        minHeight: '100%'
+        minHeight: "100%",
       }}
     >
       <Container maxWidth="md">
         <Box
           sx={{
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'column'
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <Box
             sx={{
               mb: 3,
-              textAlign: 'center'
+              textAlign: "center",
             }}
           >
             <img
               alt="Under development"
               src="/assets/errors/error-404.png"
               style={{
-                display: 'inline-block',
-                maxWidth: '100%',
-                width: 400
+                display: "inline-block",
+                maxWidth: "100%",
+                width: 400,
               }}
             />
           </Box>
@@ -55,17 +53,17 @@ const Page = () => (
             color="text.secondary"
             variant="body1"
           >
-            You either tried some shady route or you came here by mistake.
-            Whichever it is, try using the navigation
+            You either tried some shady route or you came here by mistake. Whichever it is, try
+            using the navigation
           </Typography>
           <Button
-            component={NextLink}
-            href="/"
-            startIcon={(
+            component={Link}
+            to="/"
+            startIcon={
               <SvgIcon fontSize="small">
                 <ArrowLeftIcon />
               </SvgIcon>
-            )}
+            }
             sx={{ mt: 3 }}
             variant="contained"
           >
